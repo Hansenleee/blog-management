@@ -1,0 +1,87 @@
+/**
+ * 弹性布局辅助样式
+ * @since 3.0.0
+ * @version 1.0.0
+ */
+
+ $ui-flexible = 'flex'
+ $global-ui-namespace = 'flex'
+
+.{$ui-flexible} {
+  display: flex
+  flex-wrap: wrap
+  &.force {
+    display: flex !important
+    flex-wrap: wrap !important
+  }
+  &.vertical {
+    flex-direction: column
+  }
+  &.vertical.reverse {
+    flex-direction: column-reverse
+  }
+  &.horizontal {
+    flex-direction: row
+  }
+  &.reverse {
+    flex-direction: row-reverse
+  }
+  &.justify-start {
+    justify-content: flex-start
+  }
+  &.justify-end {
+    justify-content: flex-end
+  }
+  &.justify-center {
+    justify-content: center
+  }
+  &.justify-between {
+    justify-content: space-between
+  }
+  &.justify-around {
+    justify-content: space-around
+  }
+  &.align-start {
+    align-items: flex-start
+  }
+  &.align-end {
+    align-items: flex-end
+  }
+  &.align-center {
+    align-items: center
+  }
+  &.align-stretch {
+    align-items: stretch
+  }
+  &.align-stretch .{$global-ui-namespace+'-cell'} {
+    height: auto !important
+  }
+  &.center {
+    justify-content: center
+    align-items: center
+  }
+
+// 下面属于mui-flex的基础上的扩展 结合cell
+// cell 默认flex : 1
+  & > .{$global-ui-namespace+'-cell'} {
+    flex: 1
+    flex-basis: 1
+    width: 100%
+    position: relative
+    border-bottom: 0
+    
+    &.align-self-start {
+      align-self: flex-start
+    }
+    &.align-self-end {
+      align-self: flex-end
+    }
+    &.align-self-center {
+      align-self: center
+    }
+    &.align-self-stretch {
+      align-items: stretch
+      height: auto !important
+    }
+  }
+}

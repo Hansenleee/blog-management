@@ -1,0 +1,23 @@
+{
+  "presets": [
+    "es2015",
+    "react"
+  ],
+  "plugins": [
+    "babel-plugin-syntax-dynamic-import",
+    "transform-object-rest-spread",
+    [
+      "import",
+      { 
+        "libraryName": "antd",
+        "libraryDirectory": "es",
+        "style": "css"
+      }
+    ],
+    ["styled-jsx/babel", {
+      "plugins": [
+        "styled-jsx-plugin-stylus"
+      ]
+    }]
+  ]
+}
