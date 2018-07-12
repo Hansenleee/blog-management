@@ -26,7 +26,8 @@ axios.interceptors.response.use(
         return data;
       case "-2":
         // 需要登录
-        return events.emit('change-login-visible');
+        events.emit('change-login-visible');
+        return Promise.reject(data);
       default:
         message.error(data.message);
         return Promise.reject(data)

@@ -1,4 +1,5 @@
 import React from 'react';
+import Prism from 'prismjs'
 import Page from 'src/components/page';
 import { withRouter } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
@@ -32,6 +33,8 @@ class ArticleDetail extends Page {
         this.setState({
           detail: res.result,
           content: res.result.content,
+        }, () => {
+          Prism.highlightAll();
         })
       })
   }
@@ -123,14 +126,16 @@ class ArticleDetail extends Page {
                 }
 
                 & :global(code) {
-                  background: #f6f8fa;
-                  padding: 0.2em 0.4em;
-                  border-radius: 3px;
+                  padding: 2px 4px;
+                  font-size: 90%;
+                  color: #c7254e;
+                  background-color: #f9f2f4;
+                  border-radius: 4px;
                 }
 
-                & :global(pre) {
-                  padding: 16px;
-                  background: #f6f8fa;
+                & :global(a) {
+                  color: #337ab7;
+                  text-decoration: none;
                 }
               }
             }
