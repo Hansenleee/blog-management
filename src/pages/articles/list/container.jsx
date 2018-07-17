@@ -1,9 +1,10 @@
 import React from 'react';
 import Page from 'src/components/page';
-import { Table, Row, Col, Button, Icon, Divider, Modal, Form, Input, message, Popconfirm, Cascader } from 'antd';
+import { Table, Row, Col, Button, Icon, Divider, Modal, Form, Input, message, Popconfirm, Cascader, Select } from 'antd';
 import { withRouter } from 'react-router-dom';
 
 const FormItem = Form.Item;
+const Option = Select.Option;
 const { TextArea } = Input;
 const CascaderFile = { label: 'name', value: 'id', children: 'children' }
 
@@ -165,6 +166,8 @@ class ArticleList extends Page {
         record: {},
       }
     });
+    // modal里的form重置为空
+    this.props.form.resetFields();
   }
 
   /**
@@ -172,6 +175,7 @@ class ArticleList extends Page {
    */
   addArticle(values) {
     values.cate_line_id = values.cate_line_id[1];
+    values.password = values.type === '2' ? values.password : '';
 
     this.axios.post('/article/headers/insert', values)
       .then((res) => {
@@ -205,6 +209,7 @@ class ArticleList extends Page {
    */
   editArticle(values) {
     values.cate_line_id = values.cate_line_id[1];
+    values.password = values.type === '2' ? values.password : '';
 
     this.axios.post('/article/headers/update', values)
       .then((res) => {
@@ -254,7 +259,10 @@ class ArticleList extends Page {
 
   render() {
     const { list, loading, modal, category, page } = this.state;
-    const { getFieldDecorator } = this.props.form;
+    const { getFieldDecorator, getFieldValue } = this.props.form;
+    const modalType = getFieldValue('type');
+    // 是否需要显示modal的密码
+    const isEncryption = modalType === '2';
     const formItemLayout = {
       labelCol: {
         span: 6
@@ -355,16 +363,46 @@ class ArticleList extends Page {
             </FormItem>
             <FormItem
               {...formItemLayout}
-              label="文章类别">
+              label="文章分类">
               {getFieldDecorator('cate_line_id', {
                 rules: [{
-                  required: true, message: '请选择文章类别',
+                  required: true, message: '请选择文章分类',
                 }],
                 initialValue: modal.record.cate_line_id || '',
               })(
                 <Cascader options={category} filedNames={CascaderFile}/>
               )}
             </FormItem>
+            <FormItem
+              {...formItemLayout}
+              label="文章类型">
+              {getFieldDecorator('type', {
+                rules: [{
+                  required: true, message: '请选择文章类型',
+                }],
+                initialValue: modal.record.type || '1',
+              })(
+                <Select>
+                  <Option value="1">普通</Option>
+                  <Option value="2">加密</Option>
+                </Select>
+              )}
+            </FormItem>
+            {
+              isEncryption ?
+              <FormItem
+                {...formItemLayout}
+                label="密码">
+                {getFieldDecorator('password', {
+                  rules: [{
+                    required: isEncryption, message: '请输入密码',
+                  }],
+                  initialValue: modal.record.password || '',
+                })(
+                  <Input type="password"/>
+                )}
+              </FormItem> : null
+            }
             <FormItem
               {...formItemLayout}
               label="文章简介">
