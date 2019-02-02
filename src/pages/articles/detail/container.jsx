@@ -4,6 +4,7 @@ import Page from 'src/components/page';
 import { withRouter } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import { Button, Input, Icon, message } from 'antd';
+// import { debounce } from 'lodash'
 
 const { TextArea } = Input;
 
@@ -45,6 +46,8 @@ class ArticleDetail extends Page {
   handleTextAreaChange(e) {
     this.setState({
       content: e.target.value,
+    }, () => {
+      Prism.highlightAll()
     });
   }
 
@@ -74,7 +77,10 @@ class ArticleDetail extends Page {
         </div>
         <div className="content flex">
           <div className="editor">
-            <TextArea value={content} onChange={this.handleTextAreaChange}/>
+            <TextArea value={content} onChange={(e) => {
+              e.persist()
+              this.handleTextAreaChange(e)
+            }}/>
           </div>
           <div className="show">
             <ReactMarkdown source={content}></ReactMarkdown>
@@ -126,11 +132,24 @@ class ArticleDetail extends Page {
                 }
 
                 & :global(code) {
-                  padding: 2px 4px;
+                  padding: 2px 0;
                   font-size: 90%;
                   color: #c7254e;
                   background-color: #f9f2f4;
                   border-radius: 4px;
+                }
+
+                & :global(pre.language-directory) {
+                  background: #282c34;
+                  color: #fff;
+                  border-radius: 6px;
+
+                  & :global(code) {
+                    background: transparent;
+                    color: #fff;
+                    text-shadow: none;
+                    padding: 2px 0;
+                  }
                 }
 
                 & :global(a) {

@@ -1,11 +1,14 @@
 import React from 'react';
 import Page from 'src/components/page';
-import { Table, Row, Col, Button, Icon, Divider, Modal, Form, Input, message, Popconfirm, Cascader, Select } from 'antd';
+import { Table, Row, Col, Button, Icon, Divider, Modal, Form, Input, message, Popconfirm, Cascader, Select, Layout } from 'antd';
 import { withRouter } from 'react-router-dom';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
 const { TextArea } = Input;
+const {
+  Header, Content,
+} = Layout;
 const CascaderFile = { label: 'name', value: 'id', children: 'children' }
 
 class ArticleList extends Page {
@@ -297,6 +300,7 @@ class ArticleList extends Page {
     }, {
       title: '操作',
       key: 'action',
+      width: 300,
       render: (text, record) => (
         <span>
           <Button type="primary" onClick={this.handleEditArticle.bind(this, record)}>编辑</Button>
@@ -309,27 +313,30 @@ class ArticleList extends Page {
     }];
 
     return (
-      <div className="articles-list">
-        <div className="top-bar">
+      <Layout className="articles-list">
+        <Header className="top-bar">
           <Row>
             <Col span={6}>
               <Button type="primary" onClick={this.handleAddArticle}><Icon type="plus"/>新建</Button>
             </Col>
             <Col span={18}></Col>
           </Row>
-        </div>
-        <Table 
-          columns={columns}
-          loading={loading}
-          dataSource={list}
-          rowKey="code"
-          pagination={{
-            current: page.currentPage,
-            pageSize: page.pageSize,
-            total: page.totalCount,
-            onChange: this.handlePageChange,
-          }}
-          />
+        </Header>
+        <Content className="article-table">
+          <Table 
+            columns={columns}
+            loading={loading}
+            dataSource={list}
+            rowKey="code"
+            scroll={{ y: 550 }}
+            pagination={{
+              current: page.currentPage,
+              pageSize: page.pageSize,
+              total: page.totalCount,
+              onChange: this.handlePageChange,
+            }}
+            />
+        </Content>
         <Modal
           title={modal.title}
           visible={modal.visible}
@@ -420,17 +427,24 @@ class ArticleList extends Page {
         <style jsx>{`
           @import 'src/assets/style/common/variables.styl';
 
-          .articles-list {
+          :global(.articles-list) {
             height: 100%;
-            background: $white;
+            background: #fff !important;
             padding: 25px;
 
-            & .top-bar {
+            & :global(.top-bar) {
               margin-bottom: 20px;
+              padding-left: 0;
+              background: #fff;
+            }
+
+            & :global(.article-table) {
+              flex: 1;
+              overflow: hidden;
             }
           }
         `}</style>
-      </div>
+      </Layout>
     );
   }
 }
