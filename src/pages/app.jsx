@@ -127,7 +127,7 @@ class App extends Page {
 
           .app {
             width: 100%;
-            height: 100%;
+            height: 100vh;
 
             & .side-bar {
               position: relative;

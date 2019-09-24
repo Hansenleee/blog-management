@@ -2,8 +2,9 @@ import React from 'react';
 import Prism from 'prismjs'
 import Page from 'src/components/page';
 import { withRouter } from 'react-router-dom';
-import ReactMarkdown from 'react-markdown';
+// import ReactMarkdown from 'react-markdown';
 import { Button, Input, Icon, message } from 'antd';
+import marked from 'marked';
 // import { debounce } from 'lodash'
 
 const { TextArea } = Input;
@@ -14,6 +15,7 @@ class ArticleDetail extends Page {
     this.state = {
       detail: {},
       content: '',
+      parsed: '',
     };
     // 函数声明
     this.handleTextAreaChange = this.handleTextAreaChange.bind(this);
@@ -31,9 +33,13 @@ class ArticleDetail extends Page {
       },
     })
       .then((res) => {
+        const result = res.result
+        const markedHtml = marked(result.content, {})
+
         this.setState({
           detail: res.result,
           content: res.result.content,
+          parsed: markedHtml,
         }, () => {
           Prism.highlightAll();
         })
@@ -44,8 +50,10 @@ class ArticleDetail extends Page {
    * textarea改变
    */
   handleTextAreaChange(e) {
+    const markedHtml = marked(e.target.value, {})
     this.setState({
       content: e.target.value,
+      parsed: markedHtml,
     }, () => {
       Prism.highlightAll()
     });
@@ -65,7 +73,7 @@ class ArticleDetail extends Page {
   }
 
   render() {
-    const { detail, content } = this.state;
+    const { detail, content, parsed } = this.state;
     return (
       <div className="article-detail flex vertical">
         <div className="header">
@@ -83,7 +91,8 @@ class ArticleDetail extends Page {
             }}/>
           </div>
           <div className="show">
-            <ReactMarkdown source={content}></ReactMarkdown>
+            <div className="parse-html" dangerouslySetInnerHTML={{__html: parsed}}/>
+            {/* <ReactMarkdown source={content}></ReactMarkdown> */}
           </div>
         </div>
         <style jsx>{`
@@ -108,10 +117,12 @@ class ArticleDetail extends Page {
 
             & .content {
               flex: 1;
-              overflow: auto;
+              height: 0;
+              overflow: hidden;
 
               & > div {
                 flex: 1;
+                height: 100%;
                 overflow: auto;
               }
 
@@ -126,9 +137,13 @@ class ArticleDetail extends Page {
 
               & .show {
                 margin-left: 20px;
+                padding: 4px 11px;
+                border: 1px solid #d9d9d9;
+                border-radius: 4px;
+                transition: all .3s;
                 
                 &:hover {
-                  box-shadow: 0 0 6px 6px #eee;
+                  border-color: #40a9ff;
                 }
 
                 & :global(code) {
